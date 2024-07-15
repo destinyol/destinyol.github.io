@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>短信接口Redis防爆破</title>
+      <link href="/2024/07/03/%E7%9F%AD%E4%BF%A1%E6%8E%A5%E5%8F%A3Redis%E9%98%B2%E7%88%86%E7%A0%B4/"/>
+      <url>/2024/07/03/%E7%9F%AD%E4%BF%A1%E6%8E%A5%E5%8F%A3Redis%E9%98%B2%E7%88%86%E7%A0%B4/</url>
+      
+        <content type="html"><![CDATA[<h2 id="问题描述">问题描述</h2><p>项目的业务有个功能是发送短信验证码，为了防止该接口功能被恶意调用，需要做出一些限制，比如每个手机号每60秒只能成功执行一次短信接口请求</p><h2 id="问题探索解决">问题探索解决</h2><h3 id="设计方案">设计方案</h3><p>最开始没有怎么经过思考便决定使用Redis中间件来简单解决这个问题：</p><p>当请求进入时，用手机号作为key检测该key是否存在，如果不存在则将该key存入Redis中，设置60秒过期，并正确进入业务；如果该key存在，则返回错误，不给进入短信业务</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">validKey</span> <span class="operator">=</span> 手机号 + <span class="string">&quot;xxx_xxx&quot;</span></span><br><span class="line"><span class="keyword">if</span> (redisTemplate.hasKey(validKey))&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ValueRuntimeException</span>(<span class="string">&quot;xxxxx&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">redisTemplate.opsForValue().set(validKey,<span class="number">1</span>);</span><br><span class="line">redisTemplate.expire(validKey, <span class="number">1</span>, TimeUnit.MINUTES);</span><br></pre></td></tr></table></figure><p>在我按这个思路做完简单测试之后，我发现我忽略了这是一个并发问题，上面的方法实现不能保证原子性操作，在我实际测试过程中也证明了这一点，20个线程对接口进行并发测试，20个请求全都正确进入短信业务了，这很显然不符合预期要求</p><p>既然是并发问题那就要加锁了，问题是怎么设计才能最小代价最有效的实现</p><p>我想了几个方案：</p><ol><li>最简单最直接，把那一块短信业务的代码用 synchronized 关键字加锁，一次只能进一个线程执行</li><li>用Redis实现一个简单队列，让请求排队执行，这样就不会有并发问题了</li><li>用 Map&lt;String, ReentrantLock&gt;实现一个内存锁池，针对不同的手机号进行加锁</li><li>使用redisTemplate的 increment() 保证操作的原子性</li></ol><h3 id="实验">实验</h3><p>我在探索的过程中用压测软件来实现500个请求的并发量，侧面评估每个方案的可行性。</p><p><strong>第一个方案</strong></p><p>使用synchronized关键字对整个代码块加锁，实现很简单，也不会出错，但执行效果很差，不同手机号之间还会影响，500个请求的执行平均用了8秒多，直接pass</p><p><strong>第二个方案</strong></p><p>大概想了一下，没有试，因为引入队列之后会带来一系列复杂的问题，并且还要保证队列的消息可靠性，单个线程去消费执行的也很慢，多线程消费又要保证线程之间数据一致，又要加锁，业务搞的太复杂了，不现实</p><p><strong>第三个方案</strong></p><p>这个实现起来比较简单，使用java的本地锁ReentrantLock</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Map&lt;String, ReentrantLock&gt; valueLocks = <span class="keyword">new</span> <span class="title class_">ConcurrentHashMap</span>&lt;&gt;();</span><br><span class="line"><span class="comment">// 使用 ConcurrentHashMap&lt;&gt;() 来保证多线程下不同手机号锁创建的原子性</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="type">ReentrantLock</span> <span class="variable">lock</span> <span class="operator">=</span> valueLocks.computeIfAbsent(phoneNumber, k -&gt; <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>());</span><br><span class="line"><span class="comment">//创建锁</span></span><br><span class="line"><span class="keyword">if</span> (lock.tryLock(<span class="number">0</span>,TimeUnit.SECONDS))&#123;</span><br><span class="line">        <span class="comment">//xxx短信业务</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">         <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ValueRuntimeException</span>(<span class="string">&quot;xxxxx&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>最后统计下来500个线程平均用时0.6秒，比较不错</p><p>但有个缺点是需要手动管理60秒过期的锁状态，并且需要使用java虚拟机的内存，可能会影响整体服务</p><p><strong>第四个方案</strong></p><p>这个最简单，只需要使用redisTemplate的函数，对不同手机号的key进行自增，将原子性操作的加锁，交给Redis解决，如果自增结果大于1则证明发送过了，禁止线程进入</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Long</span> <span class="variable">num</span> <span class="operator">=</span> thirdRedisTemplate.opsForValue().increment(validKey);</span><br><span class="line"><span class="keyword">if</span> (num&gt;<span class="number">1</span>)&#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ValueRuntimeException</span>(<span class="string">&quot;xxxxx&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 执行短信业务xxxxxx</span></span><br><span class="line"></span><br><span class="line">redisTemplate.expire(validKey, <span class="number">1</span>, TimeUnit.MINUTES);</span><br></pre></td></tr></table></figure><p>最后测试结果500个请求并发下用时平均0.6-0.7秒，很优秀</p><p>和第三个方案比，优点是Redis自动管理key的过期，比较简单方便，缺点是不能设计太复杂的策略，我这个场景下一个key自增就可以解决，但如果需要太复杂的策略，一个自增数解决不了，就不好用了</p><h2 id="问题结论">问题结论</h2><p>使用redisTemplate的 increment() 来解决短信接口防并发爆破最简单快捷，性能也不错</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 敲代码 </category>
+          
+          <category> 后端 </category>
+          
+          <category> Redis </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Redis </tag>
+            
+            <tag> 高并发 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Java设计模式</title>
       <link href="/2023/07/20/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
       <url>/2023/07/20/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>

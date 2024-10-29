@@ -1,0 +1,245 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>React首页加载速度优化 | pyf的日记</title><meta name="author" content="pyf"><meta name="copyright" content="pyf"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="问题描述 在将本地react项目部署至服务器，域名nginx反向代理证书什么的全都弄好，运行成功能够访问之后，觉得一切万事大吉。 但发现在首次打开项目页面时，加载的特别慢，用了七八秒才加载完成，体验比较差，于是决定对加载速度进行一些优化。 问题分析 用网页控制台查看了一下网页加载的进度，定位到了加载速度很慢的地方  发现下载网页的js文件，有15mb大小，用了8秒，然后看了下打包好的build文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React首页加载速度优化">
+<meta property="og:url" content="https://destinyol.github.io/2023/01/25/React%E9%A6%96%E9%A1%B5%E5%8A%A0%E8%BD%BD%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="pyf的日记">
+<meta property="og:description" content="问题描述 在将本地react项目部署至服务器，域名nginx反向代理证书什么的全都弄好，运行成功能够访问之后，觉得一切万事大吉。 但发现在首次打开项目页面时，加载的特别慢，用了七八秒才加载完成，体验比较差，于是决定对加载速度进行一些优化。 问题分析 用网页控制台查看了一下网页加载的进度，定位到了加载速度很慢的地方  发现下载网页的js文件，有15mb大小，用了8秒，然后看了下打包好的build文件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg">
+<meta property="article:published_time" content="2023-01-25T14:29:38.000Z">
+<meta property="article:modified_time" content="2023-09-01T16:12:04.806Z">
+<meta property="article:author" content="pyf">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg"><link rel="shortcut icon" href="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg"><link rel="canonical" href="https://destinyol.github.io/2023/01/25/React%E9%A6%96%E9%A1%B5%E5%8A%A0%E8%BD%BD%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'React首页加载速度优化',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-09-02 00:12:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="pyf的日记" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2023/07/12/H9bijZ6dhxDzmKp.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="pyf的日记"><span class="site-name">pyf的日记</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">React首页加载速度优化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-01-25T14:29:38.000Z" title="发表于 2023-01-25 22:29:38">2023-01-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-09-01T16:12:04.806Z" title="更新于 2023-09-02 00:12:04">2023-09-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B2%E4%BB%A3%E7%A0%81/">敲代码</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B2%E4%BB%A3%E7%A0%81/%E5%89%8D%E7%AB%AF/">前端</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="React首页加载速度优化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1>问题描述</h1>
+<p>在将本地react项目部署至服务器，域名nginx反向代理证书什么的全都弄好，运行成功能够访问之后，觉得一切万事大吉。</p>
+<p>但发现在首次打开项目页面时，加载的特别慢，用了七八秒才加载完成，体验比较差，于是决定对加载速度进行一些优化。</p>
+<h1>问题分析</h1>
+<p>用网页控制台查看了一下网页加载的进度，定位到了加载速度很慢的地方</p>
+<p><img src="https://s2.loli.net/2023/08/30/jpEtSldXCgIiu3U.png" alt="1.png"></p>
+<p>发现下载网页的js文件，有15mb大小，用了8秒，然后看了下打包好的build文件夹，有19.1mb。</p>
+<p>这文件大小有点离谱了啊，于是决定对整个项目部署进行精简。</p>
+<h1>问题探索</h1>
+<h2 id="代码精简自查">代码精简自查</h2>
+<p>我首先想到的是删除每个js文件中没有使用到的导入，简化一下文件依赖结构，再删除一些不需要的代码，清理一下用不到的图片素材之类的。</p>
+<p>删除这个的时候，我没找到什么好办法，我使用的是vscode自带的功能，自动整理所有未使用的import。</p>
+<p>使用方法：</p>
+<p>打开左上角，文件-首选项-设置，输入“setting”，选择“字体”，点击“在settings.json中编辑”，在json文件中输入</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;editor.codeActionsOnSave&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;source.organizeImports&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+<p>输入这个之后，每个js文件，在保存时会自动去除没有使用的import。</p>
+<p>全部删除之后，build完，小了一点，但依然还有17.7mb，这很显然还是不满足要求。</p>
+<hr>
+<h2 id="删除没用的包">删除没用的包</h2>
+<p>然后我再想着删除不需要的依赖项，这里用到了一个小工具，可以查看哪些包未被使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装</span></span><br><span class="line">npm install -g depcheck</span><br><span class="line"><span class="comment"># 安装完成后输入该命令查看为使用的包</span></span><br><span class="line">depcheck</span><br><span class="line"><span class="comment"># 对于不需要的包，使用以下命令删除</span></span><br><span class="line">npm uninstall xxx</span><br></pre></td></tr></table></figure>
+<p><img src="https://s2.loli.net/2023/08/31/4qiFVeg63O1HRJG.png" alt="2.png"></p>
+<p>找到不需要的包之后，去package.json里面把对应的包全部删除。</p>
+<p>然后使用<code>npm install</code>命令，就可以重新整理依赖了。</p>
+<p><img src="https://s2.loli.net/2023/08/31/DCvEZ2FuNfzpyel.png" alt="3.png"></p>
+<p>可以看到删了很多包，我再重新build一个试试。构建完了，还是有17.6mb，并没有起到什么作用</p>
+<hr>
+<h2 id="删除sourceMap">删除sourceMap</h2>
+<p>在浏览网页的过程中，我看到一种解决措施，可以将打包好的build文件夹中的map文件去掉，这样会让整体变小很多</p>
+<p>所以我又查询了map文件是做什么的</p>
+<blockquote>
+<p>打包后产生后缀名为.map的文件是由于配置了<strong>sourcemap选项生成的，打包后的文件不容易找到出bug对应的源代码的位置</strong>，sourcemap就是来帮我们解决这个问题的，有了map就可以像未压缩的代码一样，准确的输出是哪一行哪一列有错。</p>
+</blockquote>
+<p>可以看到map是用来在报错时定位源码位置的，是个不错的功能，但我打包好的build文件夹一共17mb，其中map文件就占了12mb</p>
+<p>所以生产模式部署到服务器上，如果map文件太大还是删除了比较好</p>
+<p>以下是我查到的一种比较合适的删除map文件的方法：</p>
+<p>因为webpack的代码中在打包时会自动读取env文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 加载环境变量</span><br><span class="line">require(&#x27;../config/env&#x27;)</span><br></pre></td></tr></table></figure>
+<p>所以我们可以利用这个性质，在根目录下创建一个.env的文件，并在里面输入</p>
+<p><img src="https://s2.loli.net/2023/08/31/Ro8qwZNdOXvakDf.png" alt="4"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 该变量用于控制让 npm run build 是否会生成map文件，为false则不生产，true则生成</span><br><span class="line">GENERATE_SOURCEMAP = false</span><br></pre></td></tr></table></figure>
+<p>这样设置完之后，再次打包build，发现文件大小只剩下5mb了</p>
+<hr>
+<h2 id="Terser压缩">Terser压缩</h2>
+<p>然后我又搜索了相关资料，我使用的打包是webpack5，发现可以使用TerserWebpackPlugin对代码进行压缩，它不仅可以压缩，还可以顺便进行代码混淆，改所有变量名，去掉所有缩进空格然后压缩到一行里</p>
+<p>阅读了webpack的官方文档之后，我对插件配置进行了一些调整（官方文档：<a target="_blank" rel="noopener" href="https://webpack.docschina.org/plugins/terser-webpack-plugin/%EF%BC%89">https://webpack.docschina.org/plugins/terser-webpack-plugin/）</a></p>
+<p>在webpack.config.js中进行相关配置</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这是我TerserPlugin打包的相关配置，在optimization下进行配置</span></span><br><span class="line">new TerserPlugin(<span class="punctuation">&#123;</span></span><br><span class="line">          parallel<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span>	<span class="comment">// 并行打包，打包加速</span></span><br><span class="line">          extractComments<span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span>	<span class="comment">// 删掉注释，若为true，表示会将注释抽取到一个单独的文件中</span></span><br><span class="line">          terserOptions<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            parse<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">              ecma<span class="punctuation">:</span> <span class="number">8</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            compress<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">              ecma<span class="punctuation">:</span> <span class="number">5</span><span class="punctuation">,</span></span><br><span class="line">              warnings<span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">              comparisons<span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">              inline<span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            toplevel<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> </span><br><span class="line">            mangle<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span>	</span><br><span class="line">            keep_classnames<span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">            keep_fnames<span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">            output<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">              ecma<span class="punctuation">:</span> <span class="number">5</span><span class="punctuation">,</span></span><br><span class="line">              comments<span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">              ascii_only<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">            <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#125;</span>)<span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+<p>这样设置之后再次打包，发现build文件夹只有4.35mb了，已经比一开始小很多了，但感觉加载速度还是不会非常流畅。</p>
+<hr>
+<h2 id="SplitChunksPlugin分包-–不需要">SplitChunksPlugin分包*–不需要*</h2>
+<blockquote>
+<p><strong>Code Splitting</strong>拆包优化的最终目标是什么？</p>
+<ol>
+<li>把更新频率低的代码和内容频繁变动的代码分离，把共用率较高的资源也拆出来，最大限度利用浏览器缓存。</li>
+<li>减少 http 请求次数的同时避免单个文件太大以免拖垮响应速度，也就是拆包时尽量实现文件个数更少、单个文件体积更小。</li>
+</ol>
+</blockquote>
+<p>这是这部分的官方文档：<a target="_blank" rel="noopener" href="https://webpack.docschina.org/plugins/split-chunks-plugin">https://webpack.docschina.org/plugins/split-chunks-plugin</a></p>
+<p>以下是我的配置</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">optimization<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    splitChunks<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      chunks<span class="punctuation">:</span> &#x27;initial&#x27;<span class="punctuation">,</span></span><br><span class="line">      minSize<span class="punctuation">:</span> <span class="number">20000</span><span class="punctuation">,</span></span><br><span class="line">      minRemainingSize<span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">      minChunks<span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">      maxAsyncRequests<span class="punctuation">:</span> <span class="number">30</span><span class="punctuation">,</span></span><br><span class="line">      maxInitialRequests<span class="punctuation">:</span> <span class="number">30</span><span class="punctuation">,</span></span><br><span class="line">      enforceSizeThreshold<span class="punctuation">:</span> <span class="number">50000</span><span class="punctuation">,</span></span><br><span class="line">      cacheGroups<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        defaultVendors<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          test<span class="punctuation">:</span> /<span class="punctuation">[</span>\\/<span class="punctuation">]</span>node_modules<span class="punctuation">[</span>\\/<span class="punctuation">]</span>/<span class="punctuation">,</span></span><br><span class="line">          priority<span class="punctuation">:</span> <span class="number">-10</span><span class="punctuation">,</span></span><br><span class="line">          reuseExistingChunk<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        default<span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          minChunks<span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">          priority<span class="punctuation">:</span> <span class="number">-20</span><span class="punctuation">,</span></span><br><span class="line">          reuseExistingChunk<span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+<p>这样可以将主要的打包js文件拆成多份，按需分块加载</p>
+<hr>
+<h2 id="路由按需懒加载">路由按需懒加载</h2>
+<p>在React16.6.0版本中，新增了React.lazy函数，它能让你像常规组件一样处理动态引入的组件，配合 webpack 的 Code Splitting，只有当组件被加载，对应的资源才会导入，从而达到懒加载的效果。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 路由懒加载demo</span><br><span class="line">import &#123; BrowserRouter as Router, Route, Switch &#125; from &#x27;react-router-dom&#x27;;</span><br><span class="line">import React, &#123; Suspense, lazy &#125; from &#x27;react&#x27;;</span><br><span class="line"></span><br><span class="line">const Home = lazy(() =&gt; import(&#x27;./routes/Home&#x27;));</span><br><span class="line">const UserManage = lazy(() =&gt; import(&#x27;./routes/UserManage&#x27;));</span><br><span class="line">const AssetManage = lazy(() =&gt; import(&#x27;./routes/AssetManage&#x27;));</span><br><span class="line">const AttendanceManage = lazy(() =&gt; import(&#x27;./routes/AttendanceManage&#x27;));</span><br><span class="line"></span><br><span class="line">const App = () =&gt; (	</span><br><span class="line">      &lt;BrowserRouter&gt;</span><br><span class="line">         &lt;Router&gt;</span><br><span class="line">    		&lt;Suspense fallback=&#123;&lt;div&gt;Loading...&lt;/div&gt;&#125;&gt;</span><br><span class="line">      			&lt;Routes&gt;</span><br><span class="line">        			&lt;Route exact path=&quot;/&quot; component=&#123;Home&#125;/&gt;</span><br><span class="line">        			&lt;Route path=&quot;/userManage&quot; component=&#123;UserManage&#125;/&gt;</span><br><span class="line">        			&lt;Route path=&quot;/assetManage&quot; component=&#123;AssetManage&#125;/&gt;</span><br><span class="line">        			&lt;Route path=&quot;/attendanceManage&quot; component=&#123;AttendanceManage&#125;/&gt;</span><br><span class="line">      			&lt;/Routes&gt;</span><br><span class="line">    		&lt;/Suspense&gt;</span><br><span class="line">  		&lt;/Router&gt; </span><br><span class="line">      &lt;/BrowserRouter&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>我使用的React版本是18.2.0，只需要按上面的写法，就可以直接实现代码分块+路由懒加载了，其余设置在creat-react-app的时候已经自动配置好相关文件了</p>
+<p>这样实现的懒加载其中代码分包已经集成进去了，webpack会根据你路由懒加载这部分的分块，自动对代码进行拆包，不需要手动再去改webpack代码拆包相关的，枉费我研究了一整天SplitChunksPlugin原理，差点就要纯手动拆包了，还好试着研究了一下这部分</p>
+<p>PS：其中有一点需要注意的是，<code>&lt;Suspense&gt;</code>一定是在<code>&lt;Router&gt;</code>的下级，<code>Route或Routes</code>的上级，不能放在<code>Routes和Route</code>之间，因为这个问题我卡了大半天，一开始看着demo随便放的，没在意，结果报错在网上查了半天也查不到，最后自己没注意试出来的。</p>
+<p><img src="https://s2.loli.net/2023/08/31/Mq8IABY3XCzQs2O.png" alt="image-20230831214532371"></p>
+<p>这样弄完之后就没有大的代码块了，只需读取较小的文件，就能显示出主页来，其余部分按需懒加载，用户体验感upup</p>
+<h3 id="小技巧">小技巧</h3>
+<p>还有个小技巧，如果是在路由的地方，页面级别的懒加载，如果直接按上文那么写的话，在切换页面的时候会闪烁一下，因为有个懒加载的过程，就算加载的再快也会闪烁一下<code>&lt;Suspense&gt;</code>组件未加载完等待的效果。</p>
+<p>这本身是没什么问题的，切页面闪一下，但如果你当前页面有不希望闪烁的地方，它会跟着一起闪烁，无论那部分你是否设置了懒加载</p>
+<p>举个例子，就比如你路由用到了Layout，如下图，你的<code>&lt;Suspense&gt;</code>组件不能放在Route中间，只能整个包裹Routes，所以要闪烁它都会一起闪，这样给用户的体验就会很差</p>
+<p><img src="https://s2.loli.net/2023/09/02/zICylYEMqFrhJw8.png" alt="image-20230902000457917"></p>
+<p>解决方法：</p>
+<p>把每个需要懒加载的页面使用函数式组件包装一下，把<code>&lt;Suspense&gt;</code>换个位置放，这样layout就不会跟着其他懒加载页面一起闪了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 函数部分</span><br><span class="line">const lazyComponent = (element) =&gt; &#123;</span><br><span class="line">        return (</span><br><span class="line">            &lt;Suspense fallback=&#123;&lt;p&gt;loading...&lt;/p&gt;&#125;&gt;</span><br><span class="line">                &#123;element&#125;</span><br><span class="line">            &lt;/Suspense&gt;</span><br><span class="line">        )</span><br><span class="line">    &#125;</span><br><span class="line"># ----------------------------------------------------------------------------</span><br><span class="line"># return的ReactNode部分</span><br><span class="line">&lt;Route element=&#123;&lt;StuLayout /&gt;&#125;&gt;</span><br><span class="line">      &lt;Route path=&#x27;/StuIndex&#x27; index element=&#123;lazyComponent(&lt;StuIndex /&gt;)&#125; /&gt;</span><br><span class="line">      &lt;Route path=&#x27;/StuIndex/ViewAnn&#x27; element=&#123;lazyComponent(&lt;ViewAnn /&gt;)&#125; /&gt;</span><br><span class="line">&lt;/Route&gt;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://destinyol.github.io">pyf</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://destinyol.github.io/2023/01/25/React%E9%A6%96%E9%A1%B5%E5%8A%A0%E8%BD%BD%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/">https://destinyol.github.io/2023/01/25/React%E9%A6%96%E9%A1%B5%E5%8A%A0%E8%BD%BD%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://destinyol.github.io" target="_blank">pyf的日记</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/React/">React</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/02/19/%E7%AE%97%E6%B3%95%E9%A2%98%E9%9A%8F%E8%AE%B0/" title="算法题随记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">算法题随记</div></div></a></div><div class="next-post pull-right"><a href="/2022/07/26/Redis%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0ES%E4%B8%8EMySQL%E5%BC%82%E6%AD%A5%E5%8F%8C%E5%86%99/" title="Redis消息队列实现ES与MySQL异步双写"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Redis消息队列实现ES与MySQL异步双写</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/04/23/Node%E9%A1%B9%E7%9B%AEWebpack%E6%89%93%E5%8C%85%E9%9D%99%E6%80%81%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%99%E7%A8%8B/" title="Node项目Webpack打包静态部署服务器教程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-23</div><div class="title">Node项目Webpack打包静态部署服务器教程</div></div></a></div><div><a href="/2022/05/26/React%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6%E9%87%8D%E6%B8%B2%E6%9F%93%E5%BC%82%E5%B8%B8%E5%88%B7%E6%96%B0%E9%97%AE%E9%A2%98/" title="React父子组件重渲染异常刷新问题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-26</div><div class="title">React父子组件重渲染异常刷新问题</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">pyf</div><div class="author-info__description">一个努力ing的后端程序员的博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/destinyol"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:godpitpy@foxmail.com" target="_blank" title="godpitpy@foxmail.com"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1037378522&amp;website=www.oicqzone.com" target="_blank" title="1037378522"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">问题探索</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%B2%BE%E7%AE%80%E8%87%AA%E6%9F%A5"><span class="toc-number">3.1.</span> <span class="toc-text">代码精简自查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%B2%A1%E7%94%A8%E7%9A%84%E5%8C%85"><span class="toc-number">3.2.</span> <span class="toc-text">删除没用的包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4sourceMap"><span class="toc-number">3.3.</span> <span class="toc-text">删除sourceMap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Terser%E5%8E%8B%E7%BC%A9"><span class="toc-number">3.4.</span> <span class="toc-text">Terser压缩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SplitChunksPlugin%E5%88%86%E5%8C%85-%E2%80%93%E4%B8%8D%E9%9C%80%E8%A6%81"><span class="toc-number">3.5.</span> <span class="toc-text">SplitChunksPlugin分包*–不需要*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E6%8C%89%E9%9C%80%E6%87%92%E5%8A%A0%E8%BD%BD"><span class="toc-number">3.6.</span> <span class="toc-text">路由按需懒加载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E6%8A%80%E5%B7%A7"><span class="toc-number">3.6.1.</span> <span class="toc-text">小技巧</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/24/java%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%B1%9E%E6%80%A7%E8%BD%BB%E9%87%8F%E7%BA%A7%E9%AA%8C%E7%A9%BA%E6%8A%9B%E9%94%99%E5%B7%A5%E5%85%B7/" title="java实体类属性轻量级验空抛错工具">java实体类属性轻量级验空抛错工具</a><time datetime="2024-10-24T01:35:39.000Z" title="发表于 2024-10-24 09:35:39">2024-10-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/09/12/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1MySQL%E4%B8%ADvarchar%E4%B8%BB%E9%94%AE%E8%B8%A9%E5%9D%91/" title="记录一次MySQL中varchar主键踩坑">记录一次MySQL中varchar主键踩坑</a><time datetime="2024-09-12T05:05:03.000Z" title="发表于 2024-09-12 13:05:03">2024-09-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/16/sm2-sm4%E6%B7%B7%E5%90%88%E5%8A%A0%E5%AF%86%E6%8E%A5%E5%8F%A3%E9%89%B4%E6%9D%83/" title="sm2+sm4混合加密接口鉴权">sm2+sm4混合加密接口鉴权</a><time datetime="2024-07-16T08:22:51.000Z" title="发表于 2024-07-16 16:22:51">2024-07-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/07/03/%E7%9F%AD%E4%BF%A1%E6%8E%A5%E5%8F%A3Redis%E9%98%B2%E7%88%86%E7%A0%B4/" title="短信接口Redis防爆破">短信接口Redis防爆破</a><time datetime="2024-07-03T02:58:19.000Z" title="发表于 2024-07-03 10:58:19">2024-07-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/22/%E7%89%B9%E6%AE%8A%E6%A0%BC%E5%BC%8FJSON%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90%E8%A3%85%E9%85%8D/" title="工厂模式特殊格式JSON自动解析装配">工厂模式特殊格式JSON自动解析装配</a><time datetime="2024-04-22T07:08:12.000Z" title="发表于 2024-04-22 15:08:12">2024-04-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2024 By pyf</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

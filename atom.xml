@@ -39,9 +39,9 @@
     <category term="后端" scheme="https://destinyol.github.io/categories/%E6%95%B2%E4%BB%A3%E7%A0%81/%E5%90%8E%E7%AB%AF/"/>
     
     
-    <category term="Java" scheme="https://destinyol.github.io/tags/Java/"/>
-    
     <category term="多线程" scheme="https://destinyol.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+    <category term="Java" scheme="https://destinyol.github.io/tags/Java/"/>
     
     <category term="Excel" scheme="https://destinyol.github.io/tags/Excel/"/>
     
@@ -72,9 +72,9 @@
     <category term="后端" scheme="https://destinyol.github.io/categories/%E6%95%B2%E4%BB%A3%E7%A0%81/%E5%90%8E%E7%AB%AF/"/>
     
     
-    <category term="反射" scheme="https://destinyol.github.io/tags/%E5%8F%8D%E5%B0%84/"/>
-    
     <category term="Java" scheme="https://destinyol.github.io/tags/Java/"/>
+    
+    <category term="反射" scheme="https://destinyol.github.io/tags/%E5%8F%8D%E5%B0%84/"/>
     
   </entry>
   

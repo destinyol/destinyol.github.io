@@ -1,0 +1,172 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ssh连接远程Host key verification failed. | pyf的日记</title><meta name="author" content="pyf"><meta name="copyright" content="pyf"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="问题描述 在对已部署的项目进行维护过程中，遇到的一个小问题，记录一下。 SSH连接云服务器ssh xxx@云服务器IP地址，提示： 1234The authenticity of host &amp;#x27;xxxxxx (xx.xxx.123.321)&amp;#x27; can&amp;#x27;t be established.ECDSA key fingerprint is SHA256:p3QHJXNIC1T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ssh连接远程Host key verification failed.">
+<meta property="og:url" content="https://destinyol.github.io/2021/11/23/ssh%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8BHost-key-verification-failed/index.html">
+<meta property="og:site_name" content="pyf的日记">
+<meta property="og:description" content="问题描述 在对已部署的项目进行维护过程中，遇到的一个小问题，记录一下。 SSH连接云服务器ssh xxx@云服务器IP地址，提示： 1234The authenticity of host &amp;#x27;xxxxxx (xx.xxx.123.321)&amp;#x27; can&amp;#x27;t be established.ECDSA key fingerprint is SHA256:p3QHJXNIC1T">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg">
+<meta property="article:published_time" content="2021-11-23T03:10:32.000Z">
+<meta property="article:modified_time" content="2023-07-12T08:21:23.857Z">
+<meta property="article:author" content="pyf">
+<meta property="article:tag" content="踩坑">
+<meta property="article:tag" content="ssh">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg"><link rel="shortcut icon" href="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg"><link rel="canonical" href="https://destinyol.github.io/2021/11/23/ssh%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8BHost-key-verification-failed/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ssh连接远程Host key verification failed.',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="pyf的日记" type="application/atom+xml">
+</head><body><div id="web_bg" style="background-color: #e5e5e5;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">25</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://s2.loli.net/2023/07/12/H9bijZ6dhxDzmKp.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">pyf的日记</span></a><a class="nav-page-title" href="/"><span class="site-name">ssh连接远程Host key verification failed.</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">ssh连接远程Host key verification failed.</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-23T03:10:32.000Z" title="发表于 2021-11-23 11:10:32">2021-11-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-07-12T08:21:23.857Z" title="更新于 2023-07-12 16:21:23">2023-07-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B2%E4%BB%A3%E7%A0%81/">敲代码</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B2%E4%BB%A3%E7%A0%81/%E8%BF%90%E7%BB%B4/">运维</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">445</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="问题描述">问题描述</h2>
+<p>在对已部署的项目进行维护过程中，遇到的一个小问题，记录一下。</p>
+<p>SSH连接云服务器ssh xxx@云服务器IP地址，提示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">The authenticity of host &#x27;xxxxxx (xx.xxx.123.321)&#x27; can&#x27;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:p3QHJXNIC1TJYWeIOttrVc98/R6BUFWu9/LiyKgXfFM.</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])?</span><br><span class="line">Host key verification failed.</span><br></pre></td></tr></table></figure>
+<p>在上网查阅了相关资料，这是ssh连接的一种保护机制，本地主机在连接前会进行验证，我是由于更换了ssh密钥发生了这个问题</p>
+<p>，按照网上说的直接敲回车yes无效。</p>
+<p>又尝试了再次更换密钥，结果并没有什么用。</p>
+<p>再尝试了多种方法之后终于解决了这个问题，下面总结了两种我尝试过可行的解决办法。</p>
+<h2 id="解决办法">解决办法</h2>
+<h3 id="第一种">第一种</h3>
+<p>就是在ssh连接过程中直接去掉主机验证</p>
+<p>只需要在ssh命令后面加上 “-o StrictHostKeyChecking=no” 参数即可，比如（用ssh连接github作为测试）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br><span class="line">-----&gt;</span><br><span class="line">The authenticity of host &#x27;github.com (20.205.243.166)&#x27; can&#x27;t be established.</span><br><span class="line">ECDSA key fingerprint is SHA256:p2QAMXNIC1TJYWeIOttrVc98/R1BUFWu3/LiyKgUfQM.</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])?</span><br><span class="line">Host key verification failed.</span><br></pre></td></tr></table></figure>
+<p>输入变为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com -o StrictHostKeyChecking=no</span><br><span class="line">-----&gt;</span><br><span class="line">Warning: Permanently added &#x27;github.com,20.205.243.166&#x27; (ECDSA) to the list of known hosts.</span><br><span class="line">Hi xxxx! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+<p>可以看到就ssh连接成功了</p>
+<h3 id="第二种">第二种</h3>
+<p>给本地的known_hosts文件中添加连接验证</p>
+<p>在命令行中输入&quot;ssh-keyscan -t rsa 服务器ip &gt;&gt; xxxx\ .ssh\known_hosts&quot; (xxxx为你的ssh文件路径)，例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh-keyscan -t rsa github.com &gt;&gt; C:\Users\asus\.ssh\known_hosts</span><br><span class="line">-----&gt;</span><br><span class="line"># github.com:22 SSH-2.0-babeld-dc5ec9be</span><br></pre></td></tr></table></figure>
+<p>添加成功后即可正常ssh连接</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://destinyol.github.io">pyf</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://destinyol.github.io/2021/11/23/ssh%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8BHost-key-verification-failed/">https://destinyol.github.io/2021/11/23/ssh%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8BHost-key-verification-failed/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://destinyol.github.io" target="_blank">pyf的日记</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%B8%A9%E5%9D%91/">踩坑</a><a class="post-meta__tags" href="/tags/ssh/">ssh</a></div><div class="post-share"><div class="social-share" data-image="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2022/01/21/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/" title="多线程生产者消费者模型学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">多线程生产者消费者模型学习</div></div><div class="info-2"><div class="info-item-1">前言 用 synchronized 关键字实现了多线程生产者消费者模型，用 wait() 和 notify() 函数实现了进程间通信 生产者进程生产完了就通知消费者过来消费，消费者消费完了就通知生产者进行生产 代码实现 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126127128129130131132133134135136137138139140import java.util.*;public class test &#123;    public static void...</div></div></div></a><a class="pagination-related" href="/2021/10/12/windows%E5%AE%89%E8%A3%85docker%E9%9A%8F%E8%AE%B0/" title="windows安装docker随记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">windows安装docker随记</div></div><div class="info-2"><div class="info-item-1">Docker Docker 将应用程序与该程序的依赖，打包在一个文件里面。运行这个文件，就会生成一个虚拟容器。程序在这个虚拟容器里运行，就好像在真实的物理机上运行一样。有了 Docker，就不用担心环境问题。 安装 1.先去下载安装一个windows的docker，下载地址👇 1https://www.docker.com/products/docker-desktop/  2.如果弹出下图所示，需要WSL  则按照微软的文档安装👇 1https://learn.microsoft.com/zh-cn/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package  步骤 4 - 下载 Linux 内核更新包  下载最新包：  适用于 x64 计算机的 WSL2 Linux 内核更新包     我在实际操作过程中，只安装了步骤4这一步，Linux内核更新包，就能正常使用docker了 </div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2024/09/12/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1MySQL%E4%B8%ADvarchar%E4%B8%BB%E9%94%AE%E8%B8%A9%E5%9D%91/" title="记录一次MySQL中varchar主键踩坑"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-12</div><div class="info-item-2">记录一次MySQL中varchar主键踩坑</div></div><div class="info-2"><div class="info-item-1">问题描述  软件版本： MySQL： 8.0.24 SpringBoot：2.6.5 Mybatis-plus：3.5.0  在一个项目的新建账号业务中用户反馈出现了bug，该业务是给一个课程中添加学生，输入学号姓名添加，如果系统中存在以该学生学号为主键的账号，那么就使用该账号记录，若没有则在账号表中新建账号 bug最终定位到是一张存储用户账号信息的表出现了重复的脏数据，如下图所示（图中学号为测试数据，无实际意义）  下图为该账号表表结构，没有分库分表，除主键没有其他约束，没有触发器：  但有一点奇怪的问题，这张表用户id（stu_id）是主键，用的varchar字段类型，但出现了重复的记录 在进一步的尝试探索中，我发现好像一条记录主键是数字，一条记录主键是字符串，如下图所示，加引号就少查出来一条  于是我决定删除数字的那条脏数据，输入了 1delete from t_student where stu_id = 2406249104 and wechat is null 但结果是报错：ERROR 1292(22007):Truncated incorrect DouBLE...</div></div></div></a><a class="pagination-related" href="/2022/05/07/kkfileview%E9%83%A8%E7%BD%B2%E8%B8%A9%E5%9D%91/" title="kkfileview部署踩坑"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-07</div><div class="info-item-2">kkfileview部署踩坑</div></div><div class="info-2"><div class="info-item-1">问题描述 在做一个项目开发的过程中，kkfileview默认部署在本地8012端口，开发测试阶段前端代码中调用kkfileview的服务时是直接用的“ip+端口”的形式，将服务器8012端口直接向外开放，用http协议直接访问 当正式服务器上部署时，因为前后端域名分开，并且都采用https协议进行传输，所以在前端运行时，无法从 1https://xxxxx域名.com 这个域名的网页中向外发起http服务请求，会报错无法运行，https和http不能混用 解决方法 用nginx对kkfileview进行代理，将 1https://xxxx域名.com/fileview 转发至服务器本地127.0.0.1:8012端口，不光要设置nginx中的转发路由后缀，还要在kkfileview的配置文件application.properties中修改server.servlet.context-path和base.url两个字段 12345server.servlet.context-path=...</div></div></div></a><a class="pagination-related" href="/2022/04/30/wsl-docker%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%90%AF%E5%8A%A8ES%E6%8A%A5%E9%94%99vm-max-map-count-65530-is-too-low/" title="wsl-docker环境下启动ES报错vm.max_map_count [65530] is too low"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="info-item-2">wsl-docker环境下启动ES报错vm.max_map_count [65530] is too low</div></div><div class="info-2"><div class="info-item-1">问题描述 在windows环境下用Docker Desktop（wsl docker）启动 elasticsearch时报错  1max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144] 解决方案 方案一 默认的vm.max_map_count值是65530,而es需要至少262144 根据 elasticsearch官方文档 的解决方案，执行以下命令后，es可以正常启动。 12wsl -d docker-desktopsysctl -w vm.max_map_count=262144 但是，以上修改只在当前会话有效，重启 Windows 和 WSL 都要重新设置 方案二 根据docker官方给出的解决办法，我尝试后，docker重启或系统重启就失效了 12wsl -d docker-desktopecho 262144 &gt;&gt; /proc/sys/vm/max_map_count 方案三 根据Using Docker-Desktop for...</div></div></div></a><a class="pagination-related" href="/2022/04/30/ElasticSearch%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%9B%B8%E5%85%B3/" title="ElasticSearch安装配置相关"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="info-item-2">ElasticSearch安装配置相关</div></div><div class="info-2"><div class="info-item-1">Docker拉取镜像 获取ElasticSearch本体镜像 12# 安装需要的版本docker pull elasticsearch:8.1.2 获取Kibana镜像（可视化管理工具，不是必须的） 12# 安装与ES对应的版本docker pull kibana:8.1.2 Docker启动命令 1234# Elasticsearch启动# 可以加上 -e &quot;discovery.type=single-node&quot; 设置ES的单节点开发模式，学习阶段加上可以省去很多配置# -v 是用来添加本地目录映射docker run --name elasticsearch -e ES_JAVA_OPTS=&quot;-Xms512m -Xmx512m&quot; -v G:\编程环境软件\elasticsearch-data\node1:/usr/share/elasticsearch/data -p 9200:9200 -p 9300:9300 elasticsearch:8.1.2 123# Kibana启动#...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://s2.loli.net/2023/07/11/NhOuKfUn253GePM.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">pyf</div><div class="author-info-description">一个努力ing的后端程序员的博客</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">25</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/destinyol"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="mailto:godpitpy@foxmail.com" target="_blank" title="godpitpy@foxmail.com"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1037378522&amp;website=www.oicqzone.com" target="_blank" title="1037378522"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">解决办法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D"><span class="toc-number">2.1.</span> <span class="toc-text">第一种</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D"><span class="toc-number">2.2.</span> <span class="toc-text">第二种</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/01/06/Excel%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B8%A6%E8%BF%9B%E5%BA%A6%E6%9D%A1%E5%BC%82%E6%AD%A5%E5%AF%BC%E5%87%BA%E6%A1%86%E6%9E%B6/" title="Excel多线程带进度条异步导出框架">Excel多线程带进度条异步导出框架</a><time datetime="2025-01-06T01:43:13.000Z" title="发表于 2025-01-06 09:43:13">2025-01-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/26/Excel%E6%B5%81%E5%BC%8F%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B8%A6%E8%BF%9B%E5%BA%A6%E6%9D%A1%E5%8A%9F%E8%83%BD%E7%9A%84%E5%AF%BC%E5%85%A5%E6%A1%86%E6%9E%B6/" title="Excel流式多线程带进度条功能的导入框架">Excel流式多线程带进度条功能的导入框架</a><time datetime="2024-12-26T04:05:43.000Z" title="发表于 2024-12-26 12:05:43">2024-12-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/24/java%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%B1%9E%E6%80%A7%E8%BD%BB%E9%87%8F%E7%BA%A7%E9%AA%8C%E7%A9%BA%E6%8A%9B%E9%94%99%E5%B7%A5%E5%85%B7/" title="java实体类属性轻量级验空抛错工具">java实体类属性轻量级验空抛错工具</a><time datetime="2024-10-24T01:35:39.000Z" title="发表于 2024-10-24 09:35:39">2024-10-24</time></div></div><div class="aside-list-item"><div class="content"><a class="title" href="/2024/09/12/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1MySQL%E4%B8%ADvarchar%E4%B8%BB%E9%94%AE%E8%B8%A9%E5%9D%91/" title="记录一次MySQL中varchar主键踩坑">记录一次MySQL中varchar主键踩坑</a><time datetime="2024-09-12T05:05:03.000Z" title="发表于 2024-09-12 13:05:03">2024-09-12</time></div></div><div class="aside-list-item"><div class="content"><a class="title" href="/2024/07/16/sm2-sm4%E6%B7%B7%E5%90%88%E5%8A%A0%E5%AF%86%E6%8E%A5%E5%8F%A3%E9%89%B4%E6%9D%83/" title="sm2+sm4混合加密接口鉴权">sm2+sm4混合加密接口鉴权</a><time datetime="2024-07-16T08:22:51.000Z" title="发表于 2024-07-16 16:22:51">2024-07-16</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2025 By pyf</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

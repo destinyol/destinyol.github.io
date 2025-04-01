@@ -155,6 +155,35 @@
     
     
     <entry>
+      <title>mysql窗口函数</title>
+      <link href="/2024/06/22/mysql%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/"/>
+      <url>/2024/06/22/mysql%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言">前言</h2><p>我在写sql语句的时候，遇到主表副表一对多的关系，需要主表join副表，并对副表的记录汇总处理等操作。之前处理这样的操作，我都是<code>group by</code>主表的字段，然后聚合函数处理副表的字段。但如果查询比较复杂，不仅需要副表join的多行数据，又需要对副表聚合查询，<code>group by</code>就不好用了。并且group by需要好多字段，否则会不满足mysql的语法要求<code>this is incompatible with sql_mode=only_full_group_by</code>。因此我学习了mysql的窗口函数，来简化这些操作。</p><h2 id="简介">简介</h2><p>窗口函数（Window Functions）允许你在查询结果的行上执行计算，而不必对数据进行分组（<code>GROUP BY</code>）。</p><p><strong>常见使用场景</strong></p><ul><li>数据分析，如排名、排序、分组统计、计算、前后值比较等</li><li>对某些分组场景简化SQL，提升效率</li><li>常用于子查询，将一些复杂条件简化</li></ul><p>需求MySQL版本 &gt;= 8</p><h2 id="语法结构">语法结构</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function_name(expression) OVER (</span><br><span class="line">    [PARTITION BY column_name(s)]    -- 分区</span><br><span class="line">    [ORDER BY column_name(s)]        -- 排序</span><br><span class="line">    [frame_clause]                   -- 窗口帧</span><br><span class="line">)</span><br></pre></td></tr></table></figure><ul><li><strong><code>PARTITION BY</code></strong>：将结果集划分为不同的分区（类似于 <code>GROUP BY</code>，但不影响行数）。</li><li><strong><code>ORDER BY</code></strong>：指定窗口内数据的排序方式（如排名、累计和等场景需要排序）。</li><li><strong><code>frame_clause</code></strong>：定义窗口的范围（例如，当前行、前 N 行、后续 N 行等）。</li></ul><h2 id="常用案例">常用案例</h2><h4 id="排名函数">排名函数</h4><ul><li><strong><code>ROW_NUMBER()</code></strong>：为分区内的每一行分配唯一的序号。</li><li><strong><code>RANK()</code></strong>：根据排序列的值分配排名，值相同时排名并列，后续排名会跳过相应位置。</li><li><strong><code>DENSE_RANK()</code></strong>：根据排序列的值分配排名，值相同时排名并列，但后续排名不会跳过。</li></ul><p>示例：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    name,</span><br><span class="line">    score,</span><br><span class="line">    <span class="built_in">ROW_NUMBER</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> class <span class="keyword">ORDER</span> <span class="keyword">BY</span> score <span class="keyword">DESC</span>) <span class="keyword">AS</span> rn,   <span class="comment">-- 按班级分区，按成绩倒序行号</span></span><br><span class="line">    <span class="built_in">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> class <span class="keyword">ORDER</span> <span class="keyword">BY</span> score <span class="keyword">DESC</span>) <span class="keyword">AS</span> rank_val,   <span class="comment">-- 按班级分区排名</span></span><br><span class="line">    <span class="built_in">DENSE_RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> class <span class="keyword">ORDER</span> <span class="keyword">BY</span> score <span class="keyword">DESC</span>) <span class="keyword">AS</span> dense_rank   <span class="comment">-- 按班级分区密集排名</span></span><br><span class="line"><span class="keyword">FROM</span> students;</span><br></pre></td></tr></table></figure><h4 id="聚合函数">聚合函数</h4><ul><li><strong><code>SUM()</code></strong>：计算分区内的总和（累加）。</li><li><strong><code>AVG()</code></strong>：计算分区内的平均值。</li><li><strong><code>MIN()</code></strong> 和 <strong><code>MAX()</code></strong>：计算分区内的最小值和最大值。</li><li><strong><code>COUNT()</code></strong>：计算分区内行数。</li></ul><p>示例：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    name,</span><br><span class="line">    salary,</span><br><span class="line">    <span class="built_in">SUM</span>(salary) <span class="keyword">OVER</span> (<span class="keyword">PARTITION</span> <span class="keyword">BY</span> department) <span class="keyword">AS</span> total_dept_salary   <span class="comment">-- 部门工资总和</span></span><br><span class="line"><span class="keyword">FROM</span> employees;</span><br></pre></td></tr></table></figure><h4 id="取值函数">取值函数</h4><ul><li><strong><code>FIRST_VALUE()</code></strong>：取分区中排序后的第一个值。</li><li><strong><code>LAST_VALUE()</code></strong>：取分区中排序后的最后一个值。</li></ul><p>示例：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    name,</span><br><span class="line">    sale_date,</span><br><span class="line">    amount,</span><br><span class="line">    <span class="built_in">FIRST_VALUE</span>(amount) <span class="keyword">OVER</span> (</span><br><span class="line">        <span class="keyword">PARTITION</span> <span class="keyword">BY</span> customer_id</span><br><span class="line">        <span class="keyword">ORDER</span> <span class="keyword">BY</span> sale_date</span><br><span class="line">        <span class="keyword">ROWS</span> <span class="keyword">BETWEEN</span> UNBOUNDED PRECEDING <span class="keyword">AND</span> UNBOUNDED FOLLOWING</span><br><span class="line">    ) <span class="keyword">AS</span> first_sale   <span class="comment">-- 每个客户的第一笔销售额</span></span><br><span class="line"><span class="keyword">FROM</span> sales;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 敲代码 </category>
+          
+          <category> 后端 </category>
+          
+          <category> MySQL </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>特殊格式JSON自动解析装配</title>
       <link href="/2024/04/22/%E7%89%B9%E6%AE%8A%E6%A0%BC%E5%BC%8FJSON%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90%E8%A3%85%E9%85%8D/"/>
       <url>/2024/04/22/%E7%89%B9%E6%AE%8A%E6%A0%BC%E5%BC%8FJSON%E8%87%AA%E5%8A%A8%E8%A7%A3%E6%9E%90%E8%A3%85%E9%85%8D/</url>
